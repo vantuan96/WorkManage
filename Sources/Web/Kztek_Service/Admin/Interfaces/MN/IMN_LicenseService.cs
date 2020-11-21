@@ -18,6 +18,6 @@ namespace Kztek_Service.Admin.Interfaces.MN
         Task<MessageReport> Update(MN_License model);
 
         Task<MessageReport> Delete(string id);
-        Task<GridModel<MN_License>> GetPagings(string key, string fromdate, string todate, int page, int pagesize);
+        Task<GridModel<MN_LicenseCustom>> GetPagings(string key, string fromdate, string todate, int page, int pagesize);
     }
 }

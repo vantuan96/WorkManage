@@ -29,15 +29,15 @@ namespace Kztek_Web.Controllers
         [CheckSessionCookie]
         public async Task<IActionResult> Index(string key, int page = 1, string exportfile = "", string fromdate ="" , string todate ="")
         {
-            //if (string.IsNullOrWhiteSpace(fromdate))
-            //{
-            //    fromdate = DateTime.Now.ToString("dd/MM/yyyy 23:59:59");
-            //}
-            //if (string.IsNullOrWhiteSpace(todate))
-            //{
-            //    todate = DateTime.Now.ToString("dd/MM/yyyy 23:59:59");
-            //}
-
+                //if (string.IsNullOrWhiteSpace(fromdate))
+                //{
+                //    fromdate = DateTime.Now.ToString("dd/MM/yyyy 23:59:59");
+                //}
+                //if (string.IsNullOrWhiteSpace(todate))
+                //{
+                //    todate = DateTime.Now.ToString("dd/MM/yyyy 23:59:59");
+                //}
+                ////
             if (!string.IsNullOrWhiteSpace(exportfile)) {
                 await ExportFile(exportfile);
             }

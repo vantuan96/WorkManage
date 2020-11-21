@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,14 +67,7 @@ namespace Kztek_Service.Admin.Implementations.MONGO.MN
         public async Task<GridModel<MN_License>> GetPaging(string key,string fromdate, string todate, int pageNumber, int pageSize)
         {
 
-            //if (!string.IsNullOrWhiteSpace(fromdate))
-            //{
-            //    fromdate = Convert.ToDateTime(fromdate).ToString("yyyy/MM/dd HH:mm:ss");
-            //}
-            //if (!string.IsNullOrEmpty(todate))
-            //{
-            //    todate = Convert.ToDateTime(todate).ToString("yyyy/MM/dd HH:mm:ss");
-            //}
+         
 
             var query = new StringBuilder();
             
@@ -99,8 +93,52 @@ namespace Kztek_Service.Admin.Implementations.MONGO.MN
             return await _MN_LicenseRepository.GetPaging(MongoHelper.ConvertQueryStringToDocument(query.ToString()), MongoHelper.ConvertQueryStringToDocument(sort.ToString()), pageNumber, pageSize);
         }
 
-        public async Task<GridModel<MN_License>> GetPagings(string key, string fromdate, string todate, int page, int pagesize)
+        public async Task<GridModel<MN_LicenseCustom>> GetPagings(string key, string fromdate, string todate, int page, int pagesize)
         {
+            if (!string.IsNullOrWhiteSpace(fromdate))
+            {
+                fromdate = Convert.ToDateTime(fromdate).ToString("dd/MM/yyyy HH:mm");
+            }
+            if (!string.IsNullOrWhiteSpace(todate))
+            { 
+                todate = Convert.ToDateTime(todate).ToString("dd/MM/yyyy HH:mm");
+            }
+
+            var license = from n in _MN_LicenseRepository.Table
+                          select n;
+            //var ex = license.Select(n => n.ExpireDate).ToList();
+
+            var lists = new List<MN_LicenseCustom>();
+            foreach (var item in license)
+            {
+                var obj = new MN_LicenseCustom() {
+                    Id = item.Id,
+                    IsExpire = item.IsExpire,
+                    ProjectName = item.ProjectName,
+                    ExpireDate = Convert.ToDateTime(item.ExpireDate)
+            
+            };
+
+                lists.Add(obj);
+            }
+            lists.Where(n => n.ExpireDate > Convert.ToDateTime(fromdate)  && n.ExpireDate < Convert.ToDateTime(todate));
+           
+                        
+
+
+            //var exprie = license.FirstOrDefault(n => n.)
+            //for (var i = 0; i < ex.ToString().Length; i++)
+            //{
+            //    obj.ExpireDate = Convert.ToDateTime(ex[i]).ToString("yyyy-MM-dd");
+            //}
+
+                             //for (int i = 0; i < ex.Count; i++)
+                             //{
+                             //    dates = Convert.ToDateTime(ex[i]);
+                             //}
+
+
+
             var str = new StringBuilder();
             str.AppendLine("{");
             if (!string.IsNullOrWhiteSpace(key))
@@ -108,6 +146,14 @@ namespace Kztek_Service.Admin.Implementations.MONGO.MN
 
                 str.AppendLine("'ProjectName' :{'$in' : [/" + key + "/i]}");
             }
+            if (!string.IsNullOrWhiteSpace(fromdate) && !string.IsNullOrWhiteSpace(todate))
+            {
+
+            }
+            //str.AppendLine("'$and' : [");
+            //str.AppendLine("{'ExpireDate' : {'$gt' : new Date('" + fromdate + "')}} ,");
+            //str.AppendLine("{'ExpireDate' : {'$lt' : new Date('" + todate + "')}}");
+            //str.AppendLine("]");
             str.AppendLine("}");
             return await _MN_LicenseRepository.GetPagings(MongoHelper.ConvertQueryStringToDocument(str.ToString()), page, pagesize);
         }
