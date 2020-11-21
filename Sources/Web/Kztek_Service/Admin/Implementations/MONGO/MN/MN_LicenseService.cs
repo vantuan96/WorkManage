@@ -101,13 +101,27 @@ namespace Kztek_Service.Admin.Implementations.MONGO.MN
 
         public async Task<GridModel<MN_License>> GetPagings(string key, string fromdate, string todate, int page, int pagesize)
         {
+            if (!string.IsNullOrWhiteSpace(fromdate))
+            {
+                fromdate = Convert.ToDateTime(fromdate).ToString("dd/MM/yyyy HH:mm:ss");
+            }
+            if (!string.IsNullOrWhiteSpace(todate))
+            {
+                todate = Convert.ToDateTime(todate).ToString("dd/MM/yyyy HH:mm:ss");
+            }
             var str = new StringBuilder();
             str.AppendLine("{");
             if (!string.IsNullOrWhiteSpace(key))
             {
-
                 str.AppendLine("'ProjectName' :{'$in' : [/" + key + "/i]}");
+
             }
+
+            str.AppendLine("'$and' : [");
+            str.AppendLine("{ 'ExpireDate': { '$lt': '" + todate + "' } }");
+            //str.AppendLine(", { 'ExpireDate': { '$gt': '" + fromdate + "' } }");
+            //str.AppendLine("{'ExpireDate' : {'$lt':'" + todate + "' } },{'ExpireDate' : {'$gt' :' " + fromdate + " '}}");
+            str.AppendLine("]");
             str.AppendLine("}");
             return await _MN_LicenseRepository.GetPagings(MongoHelper.ConvertQueryStringToDocument(str.ToString()), page, pagesize);
         }
