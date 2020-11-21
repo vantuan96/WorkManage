@@ -1,7 +1,11 @@
 {
   "ConnectionStrings": {
     //"DefaultConnection": "mongodb://admin:Futech12345678@125.212.226.137:712/Kztek_WorkManagement",
+<<<<<<< HEAD
     "DefaultConnection": "mongodb://localhost:27017/kztek_managework",
+=======
+    "DefaultConnection": "mongodb://localhost:27017/Kztek_Work",
+>>>>>>> 49cf8116cfae424a5c359b9a034c65651b23a10b
     "DefaultType": "MONGO"
   }
 }

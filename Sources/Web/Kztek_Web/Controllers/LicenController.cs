@@ -17,6 +17,7 @@ namespace Kztek_Web.Controllers
         }
         #endregion
         public async Task<IActionResult> Index(string key = "" , string fromdate="" , string todate ="" ,int page= 1)
+        
         {
             if (string.IsNullOrWhiteSpace(fromdate))
             {
@@ -27,7 +28,14 @@ namespace Kztek_Web.Controllers
                 fromdate = DateTime.Now.ToString("dd/MM/yyyy 23:59:59");
             }
             int pagesize = 10;
-
+            if (string.IsNullOrWhiteSpace(fromdate))
+            {
+                fromdate = DateTime.Now.ToString("01/01/1970 23:59:59");
+            }
+            if (string.IsNullOrWhiteSpace(todate))
+            {
+                todate = DateTime.Now.ToString("01/01/2999 23:59:59");
+            }
             var gridModel = await _MN_LicenseService.GetPagings(key, fromdate, todate, page, pagesize);
             ViewBag.key = key;
             ViewBag.Fromdate = fromdate;

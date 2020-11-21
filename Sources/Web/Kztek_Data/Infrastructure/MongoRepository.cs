@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Kztek_Core.Models;
+using Kztek_Model.Models.MN;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -108,6 +109,42 @@ namespace Kztek_Data.Infrastructure
             }
 
             return model;
+        }
+        public async Task<GridModel<T>> GetPagings(List<MN_LicenseCustom> list, BsonDocument sortColumns, int pageIndex, int pageSize)
+        {
+            var dt = await entities.GetCollection<T>();
+            var model = new GridModel<T>()
+            {
+                Data = null,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                TotalPage = 0,
+                TotalIem = 0
+            };
+
+            //var data = dt.Find(query);
+
+            //model.TotalIem = (int)await data.CountDocumentsAsync();
+
+            //var list = data
+            //.Sort(sortColumns)
+            //.Skip((pageIndex - 1) * pageSize)
+            //.Limit(pageSize);
+
+            //Mapping to model
+            model.Data = await list.ToListAsync();
+            //model.TotalIem = (int)model.Data.Count;
+
+            int i = model.TotalIem % pageSize;
+
+            if (i > 0)
+            {
+                model.TotalPage = model.TotalIem / pageSize + 1;
+            }
+            else
+            {
+                model.TotalPage = model.TotalIem / pageSiz
+            return null;
         }
 
         public async  Task<GridModel<T>> GetPagings(BsonDocument str ,int page , int pagesize)
